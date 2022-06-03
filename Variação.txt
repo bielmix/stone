@@ -1,0 +1,47 @@
+--variação de blocos
+
+ SELECT --T.Data,
+sum(T.Soma_Blocos_1) as Soma_Bloco_1
+,sum(T.Soma_Blocos_2) as Soma_Bloco_2
+,((sum(T.Soma_Blocos_1)-sum(T.Soma_Blocos_2))/sum(T.Soma_Blocos_2)) * 100 as Variacao_Bloco
+ FROM (
+
+SELECT -- Data,
+SUM(Contagem_Blocos) as Soma_Blocos_1
+,NULL AS Soma_Blocos_2
+
+ FROM (
+
+
+SELECT  --CAST(current_date() AS DATE) as Data,
+COUNT(block_number) as Contagem_Blocos
+,NULL AS Contagem_Blocos_2
+
+
+FROM `bigquery-public-data.crypto_ethereum.contracts` 
+
+WHERE block_timestamp  >=  TIMESTAMP(CURRENT_DATE()-15)
+AND block_timestamp  <  TIMESTAMP(CURRENT_DATE()-14)  
+
+) F 
+
+UNION ALL
+
+SELECT  --Data,
+Null as Soma_Blocos_1
+,SUM(Contagem_Blocos_2) AS Soma_Blocos_2
+
+FROM(
+SELECT --CAST(current_date() AS DATE) as Data,
+NULL AS Contagem_Blocos,
+COUNT(block_number) as Contagem_Blocos_2
+
+
+FROM `bigquery-public-data.crypto_ethereum.contracts` 
+
+WHERE block_timestamp  >=  TIMESTAMP(CURRENT_DATE()-1)
+AND block_timestamp  <  TIMESTAMP(CURRENT_DATE())  
+
+GROUP BY block_timestamp 
+
+ )D ) T

@@ -1,0 +1,17 @@
+--contagem de blocos no dia atual
+ SELECT Data,
+ SUM(Contagem_Blocos) as Contagem_Blocos
+
+ FROM (
+
+SELECT CAST(block_timestamp AS DATE) as Data
+,COUNT(block_number) as Contagem_Blocos
+
+
+FROM `bigquery-public-data.crypto_ethereum.contracts` 
+
+WHERE block_timestamp  >=  TIMESTAMP(CURRENT_DATE()) 
+
+GROUP BY block_timestamp ) T
+
+GROUP BY Data

@@ -1,0 +1,20 @@
+--contagem nos endereços do contrato de cada bloco
+ SELECT 
+ block_number as Bloco
+,SUM(Contagem_Token) as Contagem_Token
+
+
+
+ FROM (
+
+SELECT COUNT(address) as Contagem_Token
+,block_number
+
+
+FROM `bigquery-public-data.crypto_ethereum.contracts` 
+
+
+
+GROUP BY block_number) T
+
+GROUP BY block_number

@@ -1,0 +1,33 @@
+--quantidade de gas utilizado
+SELECT 
+ name as Nome_Token
+,block_number as Bloco
+,SUM(Contagem_Token) as Contagem_Token
+,gas_used as Gas_Utilizado
+
+
+ FROM (
+
+SELECT COUNT(contracts.address) as Contagem_Token
+,contracts.block_number
+,tokens.name
+,blocks.gas_used
+
+
+
+FROM `bigquery-public-data.crypto_ethereum.contracts` contracts
+
+left join `bigquery-public-data.crypto_ethereum.blocks`   blocks
+on blocks.number = contracts.block_number
+
+left join `bigquery-public-data.crypto_ethereum.tokens`   tokens
+on tokens.block_number = contracts.block_number
+
+WHERE name <> 'null'
+and gas_used = 30283269
+
+
+
+GROUP BY block_number,name,gas_used) T
+
+GROUP BY block_number,name,gas_used
